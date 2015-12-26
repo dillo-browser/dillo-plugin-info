@@ -33,7 +33,7 @@ declare -r  FAV_WEBBROWSER=firefox    ### CHANGE THIS IF NECESSARY
 declare -r  DISCARD_DEV="/dev/random" ### CHANGE IF NECESSARY,/dev/null 
 
 echo "Starting php built-in web server ... " 
-php -S localhost:${PHP_PORT} -t / $(pwd)/routing.php &
+php -S localhost:${PHP_PORT} -t / $(pwd)/routing.php &>"${DISCARD_DEV}" &
 echo "Checking for ${FAV_WEBBROWSER} and loading a test url: "
 echo " ${TESTURL} ..."
 which "${FAV_WEBBROWSER}" &>"${DISCARD_DEV}" && "${FAV_WEBBROWSER}" "${TESTURL}" || echo "Point your favorite web browser at: ${TESTURL}"
