@@ -24,15 +24,27 @@
 #     $> i2h coreutils wc invocation
 #       or to view the info catalog 
 #     $> i2h 
- 
-# AUTHORS 
-#        2015.12.25    +A.M.Danischewski <adam_ lastname@not gamil.com>
+#
+# ORIGINAL AUTHOR 
+#          Karl Guggisberg <karl.guggisberg@telscom.ch> 
 # 
-# ORIGINAL AUTHOR
-#        2015.12.25    +A.M.Danischewski <adam_ lastname@not gamil.com>
+# AUTHORS 
+#       +A.M.Danischewski <adam_ lastname@not gamil.com> reworked the 
+#        code to be a quasi PHP-CGI, added config.bsh, routing.php.
+#        Changed configuration to default to looking for the executables
+#        and config file where they live, created alias 'i2h'. 
+#       info2html's original web page, which has become outdated.
+#       Tim Witham <twitham@eng.fm.intel.com> made some bug fixes
+#       Jon Howell <jonh@jonh.net> made a couple enhancements, added 
+#        infocat, and moved info2html to sourceforge. Talk to him if 
+#        you'd like to commit bug fixes/enhancements to the CVS tree.
+#       Herbert J. Bernstein <yaya@bernstein-plus-sons.com> contributed 
+#         the un-gzip patch.
+#       Serguei Sokol <sokol@insa-tlse.fr> contributed the un-bzip2 
+#          patch. 
 # 
 # HISTORY
-#    2015.12.25 V 2.1  Updated, format and text.   
+#    2015.12.25 V 2.1  Updated comment header, format and text.   
 #                      +A.M.Danischewski <adam_ lastname@not gamil.com>
 
 The most recent version of this software can be found at:  
