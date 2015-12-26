@@ -10,7 +10,7 @@ which firefox &>/dev/null && firefox "http://localhost:8000/info2html?%28coreuti
 echo "The following alias will run the html version of info, if you don't have firefox edit it to your favorite browser." 
 echo "It will check if the php server is running and launch info2html" 
 echo  "Creating i2h.alias file.. " 
-echo  "alias i2h='_(){ main=${1}; shift; port=8000; netstat -an | { ! grep -q \":${port}.*LISTEN\"; }  && (php -S localhost:8000 -t / $(pwd)/routing.php & ); firefox \"http://localhost:8000/info2html?(${main})$(sed \"s/ /%2520/g\" <<< \"$@\")\"; }; _'" > i2h.alias
+echo  "alias i2h='_(){ main=\${1}; shift; port=8000; netstat -an | { ! grep -q \":\${port}.*LISTEN\"; }  && (php -S localhost:8000 -t / $(pwd)/routing.php & ); firefox \"http://localhost:8000/info2html?(\${main})\$(sed \"s/ /%2520/g\" <<< \"\$@\")\"; }; _'" > i2h.alias
 echo  "Add the entry in the i2h.alias file to your .bashrc file. " 
 echo  "You should now be able to run info whenever you want as follows:" 
 echo  "\$> i2h coreutils wc invocation" 
