@@ -1,0 +1,22 @@
+### 
+### Updated by +A.M.Danischewski December, 2015 
+###
+### Eliminated much of the hand configuration, unpack the files where 
+### you want them to live, then run the config.bsh script. That will 
+### automatically configure the application to run from the directory 
+### where it is and will create an alias file, add the alias file 
+### command to your .bashrc file and you're all set! 
+### 
+### Notes: Requires PHP, the scripts presume you have firefox, if not 
+###        you will have to edit the alias to your favorite web browser. 
+### 
+### E.g. After it's set up, run it as: 
+###     $> i2h coreutils wc invocation
+### 
+
+For the most recent version, documentation and installation
+instructions, see info2html's home page:
+http://info2html.sourceforge.net/
+
+info2html's original home page (now very out-of-date):
+http://www.iam.unibe.ch/work/docs/info2html/
