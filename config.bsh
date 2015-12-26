@@ -1,19 +1,50 @@
 #!/bin/bash 
+#---------------------------------------------------------
+#                      config.bsh
+#---------------------------------------------------------
+#
+# PURPOSE
+#  This bash script autoconfigures and generates the alias i2h, to run 
+#  from the directory where config.bsh is executed. 
+#
+# DESCRIPTION  
+#  Run this script once from the directory where info2html, infocat, 
+#  info2html.config, info2html.css live. Add the generated alias to 
+#  your .bashrc. Enjoy! 
+# 
+# AUTHORS 
+#    2015.12.25         +A.M.Danischewski <adam_ lastname@not gamil.com>
+# 
+# ORIGINAL AUTHOR
+#    2015.12.25         +A.M.Danischewski <adam_ lastname@not gamil.com>
+# 
+# HISTORY
+#    2015.12.25  V 2.1  Initial Version.   
+#                       +A.M.Danischewski <adam_ lastname@not gamil.com>
+# 
+# Caveat: If you are using not Linux (e.g. Unix), change the DISCARD_DEV 
+#         below from /dev/random to /dev/null.  
+#                        
+#------------------------------------------------------- 
 
-## Note: If you are Unix, change the redirects to /dev/null. 
-echo "Editing the routing.php file to point to $(pwd)/info2html ..."
-sed -ib "/^\$info2html.*EDIT THIS/s|^.*\$|\$info2html=\"$(pwd)/info2html\"; ### EDIT THIS|" routing.php
+declare -r  TESTURL="http://localhost:8000/info2html?%28coreutils.info.gz%29Common%2520options"
+declare -ir PHP_PORT=8000 
+declare -r  FAV_WEBBROWSER=firefox    ### CHANGE THIS IF NECESSARY 
+declare -r  DISCARD_DEV="/dev/random" ### CHANGE IF NECESSARY,/dev/null 
+
 echo "Starting php built-in web server ... " 
-php -S localhost:8000 -t / $(pwd)/routing.php &
-echo "Checking for firefox and loading a test url: "
-echo "http://localhost:8000/info2html?%28coreutils.info.gz%29Common%2520options ..."
-which firefox &>/dev/random && firefox "http://localhost:8000/info2html?%28coreutils.info.gz%29Common%2520options" || echo "Point your favorite web browser at: http://localhost:8000/info2html?%28coreutils.info.gz%29Common%2520options"
-echo "The following alias will run the html version of info, if you don't have firefox edit it to your favorite browser." 
-echo "It will check if the php server is running and launch info2html" 
+php -S localhost:${PHP_PORT} -t / $(pwd)/routing.php &
+echo "Checking for ${FAV_WEBBROWSER} and loading a test url: "
+echo " ${TESTURL} ..."
+which "${FAV_WEBBROWSER}" &>"${DISCARD_DEV}" && "${FAV_WEBBROWSER}" "${TESTURL}" || echo "Point your favorite web browser at: ${TESTURL}"
+echo "The following alias will run the html version of info, if you don't have firefox edit this script to your favorite browser. It will check if the php server is running and launch info2html." 
 echo  "Creating i2h.alias file.. " 
-echo  "alias i2h='_(){ main=\${1}; shift; port=8000; netstat -an | { ! grep -q \":\${port}.*LISTEN\"; }  && (php -S localhost:8000 -t / $(pwd)/routing.php &>/dev/random & ); firefox \"http://localhost:8000/info2html?(\${main})\$(sed \"s/ /%2520/g\" <<< \"\${@:-TOP}\")\"; }; _'" > i2h.alias
-echo  "Add the entry in the i2h.alias file to your .bashrc file. " 
+echo  "alias i2h='_(){ main=\${1}; shift; ((\$#==0)) && starturl=\"infocat\" || starturl=\"info2html?(\${main})\$(sed \"s/ /%2520/g\" <<< \"\${@:-TOP}\")\"; port=${PHP_PORT}; netstat -an | { ! grep -q \":\${port}.*LISTEN\"; }  && (php -S localhost:\${port} -t / $(pwd)/routing.php &>\"${DISCARD_DEV}\" & ); firefox \"http://localhost:\${port}/\${starturl}\"; }; _'" > i2h.alias
+echo -e "\nAdd the alias entry in the i2h.alias file to your .bashrc file. " 
+echo -e "\nalias i2h='_(){ main=\${1}; shift; ((\$#==0)) && starturl=\"infocat\" || starturl=\"info2html?(\${main})\$(sed \"s/ /%2520/g\" <<< \"\${@:-TOP}\")\"; port=${PHP_PORT}; netstat -an | { ! grep -q \":\${port}.*LISTEN\"; }  && (php -S localhost:\${port} -t / $(pwd)/routing.php &>\"${DISCARD_DEV}\" & ); firefox \"http://localhost:\${port}/\${starturl}\"; }; _'\n"
 echo  "You should now be able to run info whenever you want as follows:" 
 echo  "\$> i2h coreutils wc invocation" 
-echo  "Done .. !!"  
+echo  " ## Or, to bring up the info catalog. Simply i2h by itself:" 
+echo  "\$> i2h  "
+echo  "Done!! ..."  
 exit 0 
