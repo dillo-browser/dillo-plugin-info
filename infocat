@@ -1,0 +1,167 @@
+#!/usr/bin/perl
+#---------------------------------------------------------
+#                      infocat
+#---------------------------------------------------------
+#
+# PURPOSE
+#  This perl script prints a catalog of the info files
+#  available via info2html at this site.
+#
+# AUTHOR
+#   Jon Howell <jonh@cs.dartmouth.edu>
+# 
+# HISTORY
+#    1997.05.16  V 1.0 
+#    1998.05.05  V 1.2   became part of info2html distribution
+#                        Jon Howell <jonh@cs.dartmouth.edu>
+#    2006-08-16  V 2.0   The sorting routines are more complex now,
+#                        in an effort to produce more concise output.
+#                        Also: CSS added, HTML modernized a bit.
+#                        Sean M. Burke <sburke@cpan.org>
+#------------------------------------------------------- 
+
+# set here the full path of the info2html.conf
+$VERSION = "2.0";
+$INFO2HTMLCONF = "./info2html.conf";
+require 5;
+require($INFO2HTMLCONF);  #-- configuration settings
+use CGI;
+$ENV{'REQUEST_METHOD'} or
+ print "Note: I'm really supposed to be run as a CGI!\n";
+
+#-- patterns
+$NODEBORDER    = '\037\014?';      #-- delimiter of an info node
+$REDIRSEP      = '\177';           #-- delimiter in tag tables
+$WS            = '[ \t]+';         #-- white space +
+$WSS           = '[ \t]*';         #-- white space *
+$TE            = '[\t\,\.\n]';     #-- end of a tag
+$TAG           = '[^\t\,\.\n]+';   #-- pattern for a tag
+$FTAG          = '[^\)]+';         #-- pattern for a file name in
+                                   #-- a cross reference
+
+#---------------------------------------------------------
+#                      Escape
+#---------------------------------------------------------
+#  This procedures escapes some special characeters. The
+#  escape sequence follows the WWW guide for escaped
+#  characters in URLs
+#---------------------------------------------------------
+sub Escape{
+  local($Tag) = @_; 
+  #-- escaping is not needed anymore  KG/28.6.94
+  #  $Tag =~ s/ /%20/g;     #  space
+  #  $Tag =~ s/\+/%AB/g;    #  +
+  #-- oh yes it is -- jonh 5/16/97
+  #$Tag;
+  return CGI::escape($Tag);
+}
+
+#----------------------------------------------------------
+#                    DeEscape
+#----------------------------------------------------------
+sub DeEscape{
+  local($Tag) = @_;
+  #-- deescaping is not needed anymore. KG/28.6.94
+  #$Tag =~ s/%AB/+/g;
+  #$Tag =~ s/%20/ /g;
+  #-- yes it is jonh 5/16/97
+  #$Tag;
+  return CGI::unescape($Tag);
+}
+
+# 
+#-------------------  MAIN -----------------------------
+# 
+print CGI::header('-type'=>'text/html',
+					'-expires'=>60*60*24);
+						# expires each day, in case I add new .info files
+						# to the @INFODIR path.
+						# -- jonh 1998.05.04
+
+print "<html><title>Info2HTML Catalog</title>\n";
+print "$HTML_HEAD_STUFF</head><body class='infocat'>\n";
+
+my( %Desc2BaseExt, %BaseFreq, %BaseExt2Base );
+
+foreach $dir (@INFODIR) {
+    opendir(DIR, $dir) or next;
+    while ($baseext = readdir(DIR)) {
+        next if $infofile eq '.' or $infofile eq '..';
+        my $base;
+        if ($baseext =~ m/^(.+)\.info\.bz2$/ ) {
+	    $base = $1;
+            next unless open INFOFILE, "bzcat $dir/$baseext|";
+            $collect = 0;
+        }
+        elsif ($baseext =~ m/^(.+)\.info\.gz$/ ) {
+	    $base = $1;
+            next unless open INFOFILE, "gzip -dc $dir/$baseext|";
+            $collect = 0;
+        }
+        elsif ($baseext =~ m/^(.+)\.info$/) {
+	    $base = $1;
+            next unless open INFOFILE, $dir."/".$baseext;
+            $collect = 0;
+        }
+        else {
+            next;
+        }
+	$filedesc = "";
+	$BaseFreq{$base}++;
+	$BaseExt2Base{$baseext} = $base;
+	while (<INFOFILE>) {
+            last if (m/END-INFO-DIR-ENTRY/);
+	     # featurebug: we read only the first dirblock
+
+	    s/^\* //;
+	    if ($collect and not ($_ =~ m/^[\s\n]*$/)) {
+		$filedesc .= "<br>" if ($collect < 4);
+            	$filedesc .= $_;
+		--$collect;
+		$filedesc .= " <b class='elided'>...</b>\n" unless $collect;
+	    }
+            $collect=4 if (m/START-INFO-DIR-ENTRY/);
+	     # 4 = max number of entries per file that we show
+	}
+	close INFOFILE;
+	$Desc2BaseExt{ $filedesc || $baseext } = $baseext;
+    }
+    closedir(DIR);
+}
+
+print "<h2>GNU info on the following topics is available here:</h2>\n";
+print "<ul>\n";
+
+# Now output the list, cleverly sorting and linking...
+foreach my $desc (sort { lc($a) cmp lc($b) } keys %Desc2BaseExt) {
+  my $baseext  = $Desc2BaseExt{$desc};
+  my $base     = $BaseExt2Base{$baseext};
+  my $thisdesc = $desc;
+  my $fn       = $baseext;
+
+  if( $BaseFreq{$base} == 1 ) { # the common case: we get to be terse
+    $fn = $base;
+
+    if( $thisdesc =~ m{^([^ :]+):\s+\(([^ :\(\)]+)\)\.?}s
+             # Like: "crunkapalooza: (crunkapalooza). Crunkulate things!"
+	and lc($2) eq lc($base) and lc($2) eq lc($1)
+    ) {
+      # a common subcase: the first line is pointlessly verbose, so trim:
+      $thisdesc   =~ s{^([^ :]+):\s+\(([^ :\(\)]+)\)\.?}{$1: }s;
+    } else {
+      $thisdesc = $base if $thisdesc eq $baseext;
+    }
+  }
+  
+  print "<li class='infocatline'><a href=\"info2html?($fn)Top\">",
+    $thisdesc, "</a>\n" ;
+}
+
+print "</ul>\n", <<"EOF";
+\n<div class='generator'>
+<hr>
+<em>automatically generated by </em> 
+<a href="$DOC_URL">info2html v$VERSION</a>
+</div></body></html>
+EOF
+
