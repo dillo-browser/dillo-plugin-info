@@ -5,13 +5,21 @@
 #
 # PURPOSE
 #  This perl script converts info nodes to HTML format.
+#
+# DESCRIPTION
 #  The node is specified on the command line using the
-#  syntax
+#  syntax:
 #           (<infofile>)<tag>
+#
 #  If <infofile> and/or <tag> are missing, (dir)Top is assumed.
 #
-# AUTHOR
-#   Karl Guggisberg  <guggis@iam.unibe.ch>
+# AUTHORS 
+#        2015.12.25  +A.M.Danischewski <adam_ lastname@not gamil.com>
+#        2006.08.16  Jon Howell <jonh@cs.dartmouth.edu>
+#        1995.08.04  Tim Witham <twitham@eng.fm.intel.com>
+#
+# ORIGINAL AUTHOR
+#         11.10.93   Karl Guggisberg  <guggis@iam.unibe.ch>
 # 
 # HISTORY
 #   11.10.93  V 1.0 
@@ -30,7 +38,9 @@
 #                     may not work happily unless you tweak them a bit.
 #                     Minor bugfixes to the (de)escaping logic.
 #                     Minor typoes in comments fixed.
-#
+# 2015.12.25  V 2.1   Hacked into quasi PHP-CGI, removed CGI headers and 
+#                     and warnings. Changed configuration to auto-locate
+#                     from the home directory of this script. 
 #------------------------------------------------------- 
 require 5; # even though most of the code is in Perl 4 style.
 $VERSION = "2.0";
@@ -43,8 +53,6 @@ $INFO2HTMLCONF = $CURRENT_PATH."/info2html.conf";
 require($INFO2HTMLCONF);  #-- configuration settings
 
 use CGI;
-#$ENV{'REQUEST_METHOD'} or
- #print "Note: I'm really supposed to be run as a CGI!\n";
 
 #-- patterns
 $NODEBORDER    = '\037\014?';      #-- delimiter of an info node
@@ -644,23 +652,8 @@ sub FindFile {
 #-------------------------------------------------------
 # 
 #-------------------  MAIN -----------------------------
-#print CGI::header('-type'=>'text/html',
-#					'-expires'=>60*60*24*30);
-						# use a long expiration -- it's pretty
-						# stable data. Units are seconds; this is 1 month.
-						# -- jonh 1998.05.04
-#print "Content-type: text/html\n";  #-- Mime header for ncsa httpd 1.2
-#print "\n";
-
-#$PROGRAM = $0;			# determine our basename
-#$PROGRAM =~ s!.*/!!;
- ####ZZ
-#$PROGRAM = $ENV{'SCRIPT_NAME'}; 
-$PROGRAM = "info2html";
- #print "In here this...  $PROGRAM \n"; 
- ####ZZ
- #$CommandLine = DeEscape($ENV{'QUERY_STRING'});	# jonh DeEscape() 1997.05.16
- $CommandLine = DeEscape($ARGV[0]);	# jonh DeEscape() 1997.05.16
+$PROGRAM = "info2html";            ## +A.M.Danischewski 20151225
+$CommandLine = DeEscape($ARGV[0]); ## +A.M.Danischewski 20151225
 if ($CommandLine =~ /\(([^\)]+)\)(.+)/) {
     $BaseInfoFile = &DeEscape($1);
 	$BaseInfoFile =~ s#\.\./##g;    # jonh 5/20/97 -- sanitize up-references
