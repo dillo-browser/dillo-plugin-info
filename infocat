@@ -7,27 +7,38 @@
 #  This perl script prints a catalog of the info files
 #  available via info2html at this site.
 #
-# AUTHOR
-#   Jon Howell <jonh@cs.dartmouth.edu>
+# AUTHORS 
+#         2015.12.25    +A.M.Danischewski <adam_ lastname@not gamil.com>
+#         2006.08.16    Sean M. Burke <sburke@cpan.org>
+# 
+# ORIGINAL AUTHOR
+#         1997.05.16    Jon Howell <jonh@cs.dartmouth.edu>
 # 
 # HISTORY
 #    1997.05.16  V 1.0 
-#    1998.05.05  V 1.2   became part of info2html distribution
-#                        Jon Howell <jonh@cs.dartmouth.edu>
-#    2006-08-16  V 2.0   The sorting routines are more complex now,
-#                        in an effort to produce more concise output.
-#                        Also: CSS added, HTML modernized a bit.
-#                        Sean M. Burke <sburke@cpan.org>
+#    1998.05.05  V 1.2  became part of info2html distribution
+#                       Jon Howell <jonh@cs.dartmouth.edu>
+#    2006-08-16  V 2.0  The sorting routines are more complex now,
+#                       in an effort to produce more concise output.
+#                       Also: CSS added, HTML modernized a bit.
+#                       Sean M. Burke <sburke@cpan.org>
+#    2015-12-25  V 2.1  Hacked into a quasi PHP-CGI, removed  
+#                       the manual configuration of the conf file, 
+#                       presumes the conf file is in the same dir, 
+#                       removed the CGI header and warnings. 
+#                       +A.M.Danischewski <adam_ lastname@not gamil.com> 
+#                        
 #------------------------------------------------------- 
 
-# set here the full path of the info2html.conf
-$VERSION = "2.0";
-$INFO2HTMLCONF = "./info2html.conf";
+$VERSION = "2.1";
+use File::Basename;
+$CURRENT_PATH=dirname(__FILE__); 
+ ## If you really want your config file in a custom location, 
+ ## (e.g. ~/.config) then change this next variable accordingly. 
+$INFO2HTMLCONF = $CURRENT_PATH."/info2html.conf"; 
 require 5;
 require($INFO2HTMLCONF);  #-- configuration settings
 use CGI;
-$ENV{'REQUEST_METHOD'} or
- print "Note: I'm really supposed to be run as a CGI!\n";
 
 #-- patterns
 $NODEBORDER    = '\037\014?';      #-- delimiter of an info node
@@ -72,10 +83,12 @@ sub DeEscape{
 # 
 #-------------------  MAIN -----------------------------
 # 
-print CGI::header('-type'=>'text/html',
-					'-expires'=>60*60*24);
-						# expires each day, in case I add new .info files
-						# to the @INFODIR path.
+ ### No more need for CGI headers, we are using PHP 
+ ###   V 2.1 Change +A.M.Danischewski 20151225
+#print CGI::header('-type'=>'text/html',
+					#'-expires'=>60*60*24);
+						## expires each day, in case I add new .info files
+						## to the @INFODIR path.
 						# -- jonh 1998.05.04
 
 print "<html><title>Info2HTML Catalog</title>\n";
