@@ -41,9 +41,10 @@
 # 2015.12.25  V 2.1   Hacked into quasi PHP-CGI, removed CGI headers and 
 #                     and warnings. Changed configuration to auto-locate
 #                     from the home directory of this script. 
+#                     +A.M.Danischewski <adam_ lastname@not gamil.com> 
 #------------------------------------------------------- 
 require 5; # even though most of the code is in Perl 4 style.
-$VERSION = "2.0";
+$VERSION = "2.1";
 
 # Getting the full path of the info2html.conf
 $0 =~ m!(.*/)[^/]+$!;
