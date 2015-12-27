@@ -42,6 +42,9 @@
 #                     and warnings. Changed configuration to auto-locate
 #                     from the home directory of this script. 
 #                     +A.M.Danischewski <adam_ lastname@not gamil.com> 
+# 2015.12.27  V 2.1   Removed '.' from the first capture group of 
+#                     ParsHeaderToken, because some info pages have 
+#                     multiple .'s in their node name (e.g. Nasm). 
 #------------------------------------------------------- 
 require 5; # even though most of the code is in Perl 4 style.
 $VERSION = "2.1";
@@ -127,7 +130,10 @@ sub ParsHeaderToken{
   $HL =~ m!$Token:$WS(\(($FTAG)\))!;
   $InfoFile = $2;
   $Temp     = $2 ne "" ? '\('.$2.'\)' : "";
-  $HL =~ m!$Token:$WS$Temp$WSS([^\t\,\.\n]+)?([\t\,\.\n])!;
+   ## +A.M.Danischewski  20151227 -- Removed the period from the first 
+   ## capture group, some info pages have multiple periods in the node 
+   ## name (e.g. Nasm). 
+  $HL =~ m!$Token:$WS$Temp$WSS([^\t\,\n]+)?([\t\,\.\n])!; 
   $Tag = $1 ne "" ? $1 : "Top";
   return $InfoFile,$Tag;
 }
@@ -540,10 +546,10 @@ sub InfoNode2HTML{
       $Line = <FH2>;
       @LinkList = &ParsHeaderLine($Line);
       $CompareTag = $Tag;
-      $CompareTag =~ s/([^0-9A-Za-z])/\\$1/g;  #-- escape special chars !
+      $CompareTag =~ s/([^0-9A-Za-z])/\\$1/g;  #-- escape special chars 
       $Temp = $LinkList[1];
-      $Temp =~ y/A-Z/a-z/;    #-- to lower case
-      if($Temp =~ /^\s*$CompareTag\s*$/){          #-- node start found ?
+      $Temp =~ y/A-Z/a-z/;   #-- to lower case
+      if($Temp =~ /^\s*$CompareTag\s*$/){      #-- node start found ?
         $Found = 1;
         last;
       }
@@ -561,7 +567,7 @@ sub InfoNode2HTML{
     s/&/&amp;/g;
     s/>/&gt;/g;                         
     s/</&lt;/g;
-    if (/^\* Menu/ && $InMenu ==0) {       # -- start of menu section ?
+    if (/^\* Menu/ && $InMenu ==0) {        #-- start of menu section ?
       $InMenu = 1;
       print "</pre>\n<h3>Menu</h3>\n<pre class='menu'>";
     }
