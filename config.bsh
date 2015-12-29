@@ -1,7 +1,7 @@
 #!/bin/bash 
-#---------------------------------------------------------
+# ---------------------------------------------------------
 #                      config.bsh
-#---------------------------------------------------------
+# ---------------------------------------------------------
 #
 # PURPOSE
 #  This bash script autoconfigures and generates the alias i2h, to run 
@@ -24,13 +24,16 @@
 #    2015.12.25  V 2.1  Moved alias file to a variable, cleaned up some 
 #                       alias logic. Now, $> i2h nasm == $> i2h nasm TOP
 #                       +A.M.Danischewski <adam_ lastname@not gamil.com>
+#    2015.12.25  V 2.1  Moved PHP_PORT variable up and changed the 
+#                       to dynamically reference the TESTURL 
+#                       +A.M.Danischewski <adam_ lastname@not gamil.com>
 # Caveat: If you are using not Linux (e.g. Unix), change the DISCARD_DEV 
 #         below from /dev/random to /dev/null.  
 #                        
-#------------------------------------------------------- 
+# ------------------------------------------------------- 
 
-declare -r  TESTURL="http://localhost:8000/info2html?%28coreutils.info.gz%29Common%2520options"
-declare -ir PHP_PORT=8000 
+declare -ir PHP_PORT=8555 
+declare -r  TESTURL="http://localhost:${PHP_PORT}/info2html?%28coreutils.info.gz%29Common%2520options"
 declare -r  FAV_WEBBROWSER=firefox     ### CHANGE THIS IF NECESSARY 
 declare -r  DISCARD_DEV="/dev/random"  ### CHANGE IF NECESSARY,/dev/null 
 declare -r  I2H_ALIASFILE="i2h.alias" 
