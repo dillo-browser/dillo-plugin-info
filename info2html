@@ -491,9 +491,9 @@ sub ReplyNotFoundMessage{
 <html><head><title>Info Files  -  Error Message</title>
 $BOTS_STAY_AWAY
 $HTML_HEAD_STUFF</head><body class='error nonesuch'>
-<h1>Error</h1>
-The Info node <em>$Tag</em> in Info file <em>$FileName</em>
-does not exist.
+<h1>Error: Page not found</h1>
+<p>The Info node <q>$Tag</q> in Info file <em>$FileName</em>
+does not exist.</p>
 </body></html>
 EOF
 }
