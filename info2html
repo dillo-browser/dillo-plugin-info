@@ -414,6 +414,7 @@ sub PrintLinkInfo{
           : " accesskey='n' title='alt-n: next' ";
   }
   #-- If no auxiliary file specified, use the current info file
+  $LinkFilePre = $LinkFile eq "" ? "" : "$LinkFile: ";
   $LinkFile = $LinkFile eq "" ? $BaseInfoFile : $LinkFile;
   $LinkRef  = $LinkTag;
   $LinkTag  = &Escape($LinkTag); 
@@ -422,7 +423,7 @@ sub PrintLinkInfo{
   print <<"EOF";
 <a href="info:($LinkFileEsc)$LinkTag" $LinkAtts
 >$LinkTypeText
-  <em>$LinkFile:</em> $LinkRef</a>
+  $LinkFilePre$LinkRef</a>
 EOF
 }
 
