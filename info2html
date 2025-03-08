@@ -447,7 +447,7 @@ $HTML_HEAD_STUFF</head><body class='node'>
 EOF
 
   print "\n<div class='nav navtop'\n>", 
-    "<a href=\"infocat\">$CATALOG_URL Info Catalog</a>\n";
+    "<a href=\"info:dir\">$CATALOG_URL Directory</a>\n";
   &PrintLinkInfo("Prev",$LinkList[6],$LinkList[7],$BaseInfoFile);
   &PrintLinkInfo("Up",  $LinkList[4],$LinkList[5],$BaseInfoFile);
   &PrintLinkInfo("Next",$LinkList[2],$LinkList[3],$BaseInfoFile);
