@@ -82,6 +82,7 @@ sub DieFileNotFound{
   local($FileName) = @_;
   #-- TEXT : error message if a file could not be opened
   print <<"EOF";
+<!doctype html>
 <html><head><title>Info Files  - Error Message</title>
 $BOTS_STAY_AWAY
 $CSS_STYLE
@@ -447,6 +448,7 @@ sub PrintHeader{
   ;
 
   print <<"EOF";
+<!doctype html>
 <html><head><title>Info: ($BaseInfoFile) $LinkList[1]</title>
 $CSS_STYLE
 $HTML_HEAD_STUFF</head><body class='node'>
@@ -496,6 +498,7 @@ sub PrintFooter{
 sub ReplyNotFoundMessage{
   local($FileName,$Tag) = @_;
   print <<"EOF";
+<!doctype html>
 <html><head><title>Info Files  -  Error Message</title>
 $BOTS_STAY_AWAY
 $CSS_STYLE
