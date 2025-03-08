@@ -310,7 +310,7 @@ sub ReadTagTable{
 #----------------------------------------------------------
 sub ParsCrossRefs{
   local($prev,$Line,$BaseInfoFile) = @_;
-  local($NewLine,$Token) = (1);
+  local($NewLine,$Token) = ();
   $Line = " ".$Line;
   if ($prev =~ /\*Note([^\t\,\.]*)$/i) {
       if ($Line =~ /^$TAG$TE/) {
