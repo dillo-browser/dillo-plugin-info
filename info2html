@@ -83,7 +83,7 @@ sub DieFileNotFound{
 $BOTS_STAY_AWAY
 $HTML_HEAD_STUFF</head><body class='error noopen'>
 <h1>File IO Error</h1>
-The Info file could not be opened for reading.
+<p>The Info file could not be opened for reading.</p>
 </body></html>
 EOF
   die "\n";
