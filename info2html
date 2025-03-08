@@ -56,7 +56,7 @@ $CURRENT_PATH=dirname(__FILE__);
 $INFO2HTMLCONF = $CURRENT_PATH."/info2html.conf";
 require($INFO2HTMLCONF);  #-- configuration settings
 
-use CGI;
+use URI::Escape;
 
 #-- patterns
 $NODEBORDER    = '\037\014?';      #-- delimiter of an info node
@@ -94,14 +94,7 @@ EOF
 #---------------------------------------------------------
 sub Escape{
   local($Tag) = @_; 
-  #-- escaping is not needed anymore  KG/28.6.94
-  #-- oh yes it is -- jonh 5/16/1997
-
-  $Tag =~ s/ /%20/g;		#  space
-  $Tag =~ s/\+/%AB/g;		#  +
-
-  #$Tag;
-  return CGI::escape($Tag);
+  return uri_escape($Tag);
 }
 
 #----------------------------------------------------------
@@ -109,12 +102,7 @@ sub Escape{
 #----------------------------------------------------------
 sub DeEscape{
   local($Tag) = @_;
-  #-- deescaping is not needed anymore. KG/28.6.94
-  $Tag =~ s/%AB/%2b/g;
-  $Tag =~ s/%20/ /g;
-  #-- oh yes it is -- jonh 5/16/1997
-  #$Tag;
-  return CGI::unescape($Tag);
+  return uri_unescape($Tag);
 }
 
 #----------------------------------------------------------
