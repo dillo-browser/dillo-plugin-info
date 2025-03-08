@@ -56,6 +56,9 @@ $CURRENT_PATH=dirname(__FILE__);
 $INFO2HTMLCONF = $CURRENT_PATH."/info2html.conf";
 require($INFO2HTMLCONF);  #-- configuration settings
 
+$INFO2HTMLCSS = do { local(@ARGV, $/) = $CURRENT_PATH."/info2html.css"; <> };
+$CSS_STYLE="<style>\n$INFO2HTMLCSS\n</style>";
+
 use URI::Escape;
 
 #-- patterns
@@ -81,6 +84,7 @@ sub DieFileNotFound{
   print <<"EOF";
 <html><head><title>Info Files  - Error Message</title>
 $BOTS_STAY_AWAY
+$CSS_STYLE
 $HTML_HEAD_STUFF</head><body class='error noopen'>
 <h1>File IO Error</h1>
 <p>The Info file could not be opened for reading.</p>
@@ -444,6 +448,7 @@ sub PrintHeader{
 
   print <<"EOF";
 <html><head><title>Info: ($BaseInfoFile) $LinkList[1]</title>
+$CSS_STYLE
 $HTML_HEAD_STUFF</head><body class='node'>
 EOF
 
@@ -493,6 +498,7 @@ sub ReplyNotFoundMessage{
   print <<"EOF";
 <html><head><title>Info Files  -  Error Message</title>
 $BOTS_STAY_AWAY
+$CSS_STYLE
 $HTML_HEAD_STUFF</head><body class='error nonesuch'>
 <h1>Error: Page not found</h1>
 <p>The Info node <q>$Tag</q> in Info file <em>$FileName</em>
