@@ -205,7 +205,7 @@ sub MenuItem2HTML{
      # Yes, we routinely double-escape.  Does anyone remember why?
 
     #-- produce a HTML line
-    return "$MENU_DOT<a class='menux' href=\"$PROGRAM?($MenuLinkFile)$MenuLinkTag\">$MenuLinkRef</a>$MenuLinkText";
+    return "$MENU_DOT<a class='menux' href=\"info:($MenuLinkFile)$MenuLinkTag\">$MenuLinkRef</a>$MenuLinkText";
 }
   
 #-------------------------------------------------------------
@@ -339,7 +339,7 @@ sub ParsCrossRefs{
       $CrossRefRef =~ s/-NEWLINE-/\n/g;
       $CrossRefTag = &Escape($CrossRefTag);   # -- escape specials
       $BaseInfoFile = &Escape($BaseInfoFile);
-      $NewLine .= "<a class='xref' title='a cross reference' href=\"$PROGRAM?($BaseInfoFile)$CrossRefTag\"\n>$CR_URL$CrossRefRef</a>$CrossRefText";
+      $NewLine .= "<a class='xref' title='a cross reference' href=\"info:($BaseInfoFile)$CrossRefTag\"\n>$CR_URL$CrossRefRef</a>$CrossRefText";
       next;                     # -- .. take the next one
   }
     if ($CrossRef !~ /$TE/) {	# never mind if tag doesn't end on this line
@@ -373,7 +373,7 @@ sub ParsCrossRefs{
     $CrossRefTag = &Escape($CrossRefTag);      #-- escape specials
     $CrossRefFile = &Escape($CrossRefFile);
     #-- append the HTML text
-    $NewLine .= "<a class='xref' title='a cross reference' href=\"$PROGRAM?($CrossRefFile)$CrossRefTag\"\n>$CR_URL$CrossRefRef</a>$CrossRefText";
+    $NewLine .= "<a class='xref' title='a cross reference' href=\"info:($CrossRefFile)$CrossRefTag\"\n>$CR_URL$CrossRefRef</a>$CrossRefText";
   }
   if ($NewLine =~ /\*Note([^\t\,\.]*)$/i) {
       return "DONTPRINTYET $NewLine";
@@ -420,7 +420,7 @@ sub PrintLinkInfo{
   $LinkFileEsc = &Escape($LinkFile);
   #-- print the HTML Text
   print <<"EOF";
-<a href="$PROGRAM?($LinkFileEsc)$LinkTag" $LinkAtts
+<a href="info:($LinkFileEsc)$LinkTag" $LinkAtts
 >$LinkTypeText
   <em>$LinkFile:</em> $LinkRef</a>
 EOF
