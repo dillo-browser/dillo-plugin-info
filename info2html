@@ -447,13 +447,15 @@ sub PrintHeader{
 $HTML_HEAD_STUFF</head><body class='node'>
 EOF
 
-  print "\n<div class='nav navtop'\n>", 
-    "<a href=\"info:dir\">$CATALOG_URL Directory</a>\n";
-  &PrintLinkInfo("Prev",$LinkList[6],$LinkList[7],$BaseInfoFile);
-  &PrintLinkInfo("Up",  $LinkList[4],$LinkList[5],$BaseInfoFile);
-  &PrintLinkInfo("Next",$LinkList[2],$LinkList[3],$BaseInfoFile);
+  if ($BaseInfoFile ne 'dir') {
+    print "\n<div class='nav navtop'\n>";
+    &PrintLinkInfo("Prev",$LinkList[6],$LinkList[7],$BaseInfoFile);
+    &PrintLinkInfo("Up",  $LinkList[4],$LinkList[5],$BaseInfoFile);
+    &PrintLinkInfo("Next",$LinkList[2],$LinkList[3],$BaseInfoFile);
+    print "</div>";
+  }
 
-  print "</div>\n\n$heading";
+  print "\n\n$heading";
 
   print "\n<pre>";
   return;
@@ -469,13 +471,13 @@ sub PrintFooter{
   local(*LinkList,$BaseInfoFile) =@_;
   #-- TEXT for the footer of an info node
   print "</pre>\n\n";
-  print "<div class='nav navbottom'\n>", 
-   "<a href=\"infocat\">$CATALOG_URL Info Catalog</a>\n";
-  &PrintLinkInfo("Prev",$LinkList[6],$LinkList[7],$BaseInfoFile,1);
-  &PrintLinkInfo("Up",  $LinkList[4],$LinkList[5],$BaseInfoFile,1);
-  &PrintLinkInfo("Next",$LinkList[2],$LinkList[3],$BaseInfoFile,1);
-
-  print "</div>\n";
+  if ($BaseInfoFile ne 'dir') {
+    print "<div class='nav navbottom'\n>";
+    &PrintLinkInfo("Prev",$LinkList[6],$LinkList[7],$BaseInfoFile,1);
+    &PrintLinkInfo("Up",  $LinkList[4],$LinkList[5],$BaseInfoFile,1);
+    &PrintLinkInfo("Next",$LinkList[2],$LinkList[3],$BaseInfoFile,1);
+    print "</div>\n";
+  }
 
   print "<!-- info2html v$VERSION -->\n";
 
